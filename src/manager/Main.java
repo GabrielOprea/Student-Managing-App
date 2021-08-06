@@ -8,7 +8,13 @@ import java.util.List;
 
 public class Main {
 
-    public static final String filename = "students.dat";
+    public static void main(String[] args) {
+        try {
+            parseInput(args);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     private static void parseInput(String[] args) throws Exception {
         if(args.length < 1) {
@@ -16,6 +22,8 @@ public class Main {
         }
 
         String cmd = args[0];
+
+        final String filename = "students.dat";
 
         List<Student> students;
         try {
@@ -81,13 +89,5 @@ public class Main {
 
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
         oos.writeObject(StudentManager.getInstance().getListStud());
-    }
-
-    public static void main(String[] args) {
-        try {
-            parseInput(args);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 }
