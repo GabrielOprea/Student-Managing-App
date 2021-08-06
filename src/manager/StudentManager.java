@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentManager {
-    public static StudentManager INSTANCE = null;// private ca de asta e Singleton si e default pus pe null
-    public List<Student> listStud;
+    public static StudentManager INSTANCE = null;//TODO: private ca de asta e Singleton si e default pus pe null
+    public List<Student> listStud;//TODO: private
 
     public void createStudent(String firstName, String lastName, int registrationNum) throws DuplicateStudentException {
         Student crtStud = new Student(firstName, lastName, registrationNum);
