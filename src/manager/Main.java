@@ -1,18 +1,36 @@
 package manager;
 
+import java.sql.*;
 import exceptions.IncompleteArgumentsException;
 import exceptions.NotEnoughArgumentsException;
 
 import java.io.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/studentmanaging", "root",
+                    "aDesea132_");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from students");
+            while (rs.next())
+                System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
+            con.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+
         try {
             parseInput(args);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -23,18 +41,28 @@ public class Main {
 
         String cmd = args[0];
 
-        final String filename = "students.dat";
+        final String filename = "students1.dat";
 
-        List<Student> students;
+        List<Student> students = null;
+        ObjectInputStream ois = null;
         try {
+            ois = new ObjectInputStream(new FileInputStream(filename));
+            Object oa = ois.readObject();
+            if (oa == null) {
+                students = null;
+            } else {
+                students = new ArrayList<Student>();
+            }
 
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
-            students = (List<Student>) ois.readObject();
-        } catch (IOException e) {
-
-            students = null;
+            while (true) {
+                students.add((Student) oa);
+                oa = ois.readObject();
+            }
+        } catch(EOFException e) {
+            ois.close();
+        } catch(IOException e) {
+            students = new ArrayList<Student>();
         }
-
 
         StudentManager.getInstance().setListStud(students);
 
@@ -87,7 +115,5 @@ public class Main {
                 System.exit(1);
         }
 
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
-        oos.writeObject(StudentManager.getInstance().getListStud());
     }
 }
