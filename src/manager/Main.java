@@ -1,9 +1,9 @@
 package manager;
 
-import dao.DAO;
+import dao.CourseDAO;
 import dao.DAOFactory;
-import dao.DatabaseDAO;
-import dao.FileDAO;
+
+import dao.StudentDAO;
 import exceptions.IncompleteArgumentsException;
 import exceptions.NotEnoughArgumentsException;
 
@@ -26,7 +26,9 @@ public class Main {
         int registrationNumber = -1;
         String courseDescription = null, courseTitle = null, firstName = null, lastName = null;
 
-        DAO dao = new DAOFactory().getDAO("file");
+        String inputType = "database";
+        StudentDAO studentDao = new DAOFactory().getStudentDAO(inputType);
+        CourseDAO courseDao = new DAOFactory().getCourseDAO(inputType);
 
         switch(cmd) {
             case "-createStudent":
@@ -42,18 +44,18 @@ public class Main {
                 if(lastName == null || firstName == null || registrationNumber == -1) {
                     throw new IncompleteArgumentsException();
                 }
-                dao.createStudent(firstName, lastName, registrationNumber);
+                studentDao.createStudent(firstName, lastName, registrationNumber);
                 break;
             case "-showAllStudents":
 
-                dao.showAllStudents();
+                studentDao.showAllStudents();
                 break;
             case "-showCourses":
                 if(!args[1].startsWith("-rn")) {
                     throw new IncompleteArgumentsException();
                 }
                 registrationNumber = Integer.parseInt(args[1].substring(args[1].indexOf('=') + 1));
-                dao.printCourses(registrationNumber);
+                courseDao.printCourses(registrationNumber);
                 break;
             case "-addCourse":
                 for(int i = 1; i < args.length; i++) {
@@ -68,7 +70,7 @@ public class Main {
                 if(registrationNumber == -1 || courseTitle == null || courseDescription == null) {
                     throw new IncompleteArgumentsException();
                 }
-                dao.addCourse(registrationNumber, courseTitle, courseDescription);
+                courseDao.addCourse(registrationNumber, courseTitle, courseDescription);
                 break;
             default:
                 System.exit(1);
