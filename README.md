@@ -1,7 +1,7 @@
 App in Java that stores databases of students and courses and provides various functionalities:
 - creating students
 - assigning courses
-- creating student with a list of courses
+- creating a student with a list of courses
 - printing students
 - printing courses
 
