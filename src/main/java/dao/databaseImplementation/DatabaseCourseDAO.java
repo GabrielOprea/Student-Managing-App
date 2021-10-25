@@ -1,9 +1,15 @@
-package dao;
+package dao.databaseImplementation;
+
+import dao.DatabaseConnection;
+import dao.interfaces.CourseDAO;
 
 import java.sql.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class DatabaseCourseDAO implements CourseDAO {
 
+    private static Logger logger = Logger.getLogger(DatabaseCourseDAO.class.getName());
     private static DatabaseCourseDAO INSTANCE = null;
     private Connection con;
     private Statement stmt;
@@ -48,10 +54,9 @@ public class DatabaseCourseDAO implements CourseDAO {
 
     @Override
     public void printCourses(int registrationNum) throws Exception {
-        String sql = "SELECT a.title, a.description FROM " + coursesTable + " a " +
-                    "NATURAL JOIN " + studToCoursesTable + " b " +
-                    "NATURAL JOIN " + studentsTable + " c " +
-                    "WHERE c.registrationNumber = ?";
+
+        String sql = "SELECT title FROM " + studToCoursesTable +
+                    " WHERE registrationNumber = ?";
 
         DatabaseConnection dbConnection = new DatabaseConnection();
 
@@ -60,7 +65,7 @@ public class DatabaseCourseDAO implements CourseDAO {
 
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            System.out.println(rs.getString(1) + "  " + rs.getString(2));
+            logger.log(Level.INFO, rs.getString(1));
         }
 
         dbConnection.closeConnection();

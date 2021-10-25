@@ -1,8 +1,16 @@
-package dao;
+package dao.databaseImplementation;
+import dao.DatabaseConnection;
+import dao.interfaces.StudentDAO;
+import dto.Course;
+
 import java.sql.*;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class DatabaseStudentDAO implements StudentDAO {
 
+    private static Logger logger = Logger.getLogger(DatabaseStudentDAO.class.getName());
     private static DatabaseStudentDAO INSTANCE = null;
     private final String dbName;
     private final String studentsTable;
@@ -46,9 +54,17 @@ public class DatabaseStudentDAO implements StudentDAO {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            System.out.println(rs.getInt(1) + "  " + rs.getString(2) + "  " + rs.getString(3));
+            logger.log(Level.INFO,
+                    rs.getInt(1) + "  "
+                            + rs.getString(2) + "  "
+                            + rs.getString(3));
         }
 
         dbConnection.closeConnection();
+    }
+
+    @Override
+    public void createStudentWithCourses(String firstName, String lastName, int registrationNum, List<Course> courses) {
+
     }
 }

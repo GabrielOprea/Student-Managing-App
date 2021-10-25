@@ -1,4 +1,4 @@
-package dao;
+package dao.interfaces;
 
 public interface CourseDAO {
     void addCourse(int registrationNum, String courseTitle, String description) throws Exception;

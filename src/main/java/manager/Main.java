@@ -1,11 +1,15 @@
 package manager;
 
-import dao.CourseDAO;
+import dao.interfaces.CourseDAO;
 import dao.DAOFactory;
 
-import dao.StudentDAO;
+import dao.interfaces.StudentDAO;
+import dto.Course;
 import exceptions.IncompleteArgumentsException;
 import exceptions.NotEnoughArgumentsException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -26,7 +30,7 @@ public class Main {
         int registrationNumber = -1;
         String courseDescription = null, courseTitle = null, firstName = null, lastName = null;
 
-        String inputType = "database";
+        String inputType = "hibernate";
         StudentDAO studentDao = new DAOFactory().getStudentDAO(inputType);
         CourseDAO courseDao = new DAOFactory().getCourseDAO(inputType);
 
@@ -45,6 +49,36 @@ public class Main {
                     throw new IncompleteArgumentsException();
                 }
                 studentDao.createStudent(firstName, lastName, registrationNumber);
+                break;
+
+            case "-createStudentWithCourses":
+                for(int i = 1; i <= 3; i++) {
+                    if (args[i].startsWith("-rn")) {
+                        registrationNumber = Integer.parseInt(args[i].substring(args[i].indexOf('=') + 1));
+                    } else if (args[i].startsWith("-fn")) {
+                        firstName = args[i].substring(args[i].indexOf('=') + 1);
+                    } else if (args[i].startsWith("-ln")) {
+                        lastName = args[i].substring(args[i].indexOf("=") + 1);
+                    }
+                }
+                if (lastName == null || firstName == null || registrationNumber == -1) {
+                    throw new IncompleteArgumentsException();
+                }
+
+                List<Course> courses = new ArrayList<>();
+                for(int i = 4; i < args.length; i += 2) {
+                    if(args[i].startsWith("-ct")) {
+                        courseTitle = args[i].substring(args[i].indexOf('=') + 1);
+                    } else courseDescription = args[i].substring(args[i].indexOf("=") + 1);
+
+                    if (args[i + 1].startsWith("-ct")) {
+                        courseTitle = args[i + 1].substring(args[i + 1].indexOf('=') + 1);
+                    } else courseDescription = args[i + 1].substring(args[i + 1].indexOf("=") + 1);
+
+                    Course course = new Course(courseTitle, courseDescription, registrationNumber);
+                    courses.add(course);
+                }
+                studentDao.createStudentWithCourses(firstName, lastName, registrationNumber, courses);
                 break;
             case "-showAllStudents":
 

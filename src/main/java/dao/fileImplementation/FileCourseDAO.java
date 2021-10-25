@@ -1,5 +1,6 @@
-package dao;
+package dao.fileImplementation;
 
+import dao.interfaces.CourseDAO;
 import dto.Student;
 import exceptions.StudentNotFoundException;
 
@@ -7,7 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileCourseDAO implements CourseDAO{
+public class FileCourseDAO implements CourseDAO {
 
     private static FileCourseDAO INSTANCE = null;
     private List<Student> listStud;
@@ -15,7 +16,7 @@ public class FileCourseDAO implements CourseDAO{
     private final String file = "students1.dat";
     public void addCourse(int registrationNum, String courseTitle, String description) throws StudentNotFoundException, IOException {
         Student findStud = listStud.stream()
-                .filter(stud -> stud.getRegistrationNum() == registrationNum)
+                .filter(stud -> stud.getRegistrationNumber() == registrationNum)
                 .findFirst()
                 .orElse(null);
         if(findStud == null) {
@@ -33,7 +34,7 @@ public class FileCourseDAO implements CourseDAO{
     }
 
     public void printCourses(int registrationNum) throws StudentNotFoundException {
-        Student findStud = listStud.stream().filter(stud -> stud.getRegistrationNum() == registrationNum)
+        Student findStud = listStud.stream().filter(stud -> stud.getRegistrationNumber() == registrationNum)
                 .findFirst().orElse(null);
         if(findStud == null) {
             throw new StudentNotFoundException();

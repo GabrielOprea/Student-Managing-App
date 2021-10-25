@@ -1,14 +1,18 @@
-package dao;
+package dao.fileImplementation;
 
+import dao.interfaces.StudentDAO;
+import dto.Course;
 import dto.Student;
 import exceptions.DuplicateStudentException;
-import exceptions.StudentNotFoundException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class FileStudentDAO implements StudentDAO {
+    private static Logger logger = Logger.getLogger(FileStudentDAO.class.getName());
     private static FileStudentDAO INSTANCE = null;
     private List<Student> listStud;
 
@@ -45,13 +49,18 @@ public class FileStudentDAO implements StudentDAO {
             while (true) {
                 Object oa = in.readObject();
                 Student stud = (Student) oa;
-                System.out.println(stud);
+                logger.log(Level.INFO, stud.toString());
             }
         } catch (EOFException e) {
         }
 
         file.close();
         in.close();
+    }
+
+    @Override
+    public void createStudentWithCourses(String firstName, String lastName, int registrationNum, List<Course> courses) {
+
     }
 
     public static FileStudentDAO getInstance() {
